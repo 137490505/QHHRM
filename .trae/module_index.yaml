@@ -1,0 +1,1460 @@
+# HRMS 项目模块索引
+# 用于快速定位模块对应的前端页面、后端API、数据库表等
+# 当添加新功能时，请同步更新此文件
+
+version: "1.0"
+lastUpdated: "2026-05-24"
+
+modules:
+
+  # ========================================
+  # 员工花名册模块
+  # ========================================
+  - id: employee
+    name: 员工花名册
+    nameEn: Employee Management
+    category: 人事管理
+    description: 管理员工基本信息、合同、薪资模式等
+
+    frontend:
+      pages:
+        - path: src/views/employee/EmployeeList.vue
+          name: 员工列表
+          route: /employees
+          componentName: EmployeeList
+          description: 员工主列表页面，包含查询、新增、编辑、批量操作
+          lists:
+            - name: 员工主列表
+              dataKey: data
+              pagination: true
+              rowKey: id
+              columns:
+                - key: employeeType
+                  title: 员工类型
+                - key: salaryMode
+                  title: 薪资模式
+                - key: hireDate
+                  title: 入职日期
+                - key: tags
+                  title: 标签
+                - key: isActive
+                  title: 状态
+                - key: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.employee.create
+                text: 新增员工
+                icon: PlusOutlined
+                action: showAddModal
+                type: primary
+              - permission: button.employee.import
+                text: 批量导入
+                icon: UploadOutlined
+                action: handleBatchImport
+              - permission: button.employee.export
+                text: 批量导出
+                icon: DownloadOutlined
+                action: handleBatchExport
+              - permission: button.employee.dismiss
+                text: 批量离职
+                icon: UserDeleteOutlined
+                action: handleBatchDismiss
+                danger: true
+                condition: selectedRows.length > 0
+              - text: 刷新
+                icon: SyncOutlined
+                action: loadData
+            rowActions:
+              - permission: (无权限控制)
+                text: 查看
+                action: handleView
+              - permission: button.employee.edit
+                text: 编辑
+                action: handleEdit
+              - permission: button.employee.dismiss
+                text: 离职/复职
+                action: handleToggleDismiss
+                danger: true
+              - permission: button.employee.resetPassword
+                text: 重置密码
+                action: handleResetPassword
+          modals:
+            - name: 新增/编辑员工弹窗
+              title: 新增员工 / 编辑员工
+              fields:
+                - step: 0
+                  title: 基本信息
+                  fields:
+                    - name: employeeNo
+                      label: 工号
+                      type: input
+                      required: true
+                    - name: name
+                      label: 姓名
+                      type: input
+                      required: true
+                    - name: gender
+                      label: 性别
+                      type: radio
+                    - name: idCard
+                      label: 身份证号
+                      type: input
+                      required: true
+                    - name: phone
+                      label: 手机号
+                      type: input
+                      required: true
+                - step: 1
+                  title: 组织信息
+                  fields:
+                    - name: orgUnitId
+                      label: 所属组织
+                      type: treeSelect
+                      required: true
+                    - name: employeeType
+                      label: 员工类型
+                      type: select
+                - step: 2
+                  title: 薪资信息
+                - step: 3
+                  title: 合同信息
+          queryFields:
+            - name: keyword
+              label: 关键字
+              placeholder: 工号/姓名/身份证/手机
+              type: input
+            - name: orgUnitId
+              label: 所属组织
+              type: treeSelect
+            - name: employeeType
+              label: 员工类型
+              type: select
+            - name: isActive
+              label: 状态
+              type: select
+
+        - path: src/views/employee/EmployeeDetailView.vue
+          name: 员工详情
+          route: /employees/detail/:id
+          componentName: EmployeeDetailView
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - getEmployeeList
+          - getEmployee
+          - createEmployee
+          - updateEmployee
+          - deleteEmployee
+          - batchImportEmployees
+          - batchExportEmployees
+          - resetEmployeePassword
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/EmployeesController.cs
+          methods:
+            - GET /api/v1/employees
+            - GET /api/v1/employees/{id}
+            - POST /api/v1/employees
+            - PUT /api/v1/employees/{id}
+            - DELETE /api/v1/employees/{id}
+            - POST /api/v1/employees/batch-import
+            - POST /api/v1/employees/{id}/reset-password
+      services:
+        - path: src/HRMS.Application/Services/EmployeeService.cs
+          methods:
+            - GetEmployeeListAsync
+            - GetEmployeeByIdAsync
+            - CreateEmployeeAsync
+            - UpdateEmployeeAsync
+            - DeleteEmployeeAsync
+            - ResetPasswordAsync
+      repositories:
+        - path: src/HRMS.Infrastructure/Repositories/EmployeeRepository.cs
+        - path: src/HRMS.Domain/Interfaces/IEmployeeRepository.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/Employee.cs
+          tableName: sys_employee
+          fields:
+            - id
+            - employeeNo
+            - name
+            - gender
+            - idCard
+            - phone
+            - orgUnitId
+            - employeeType
+            - salaryMode
+            - hireDate
+            - isActive
+            - tags
+
+    database:
+      tables:
+        - name: sys_employee
+          description: 员工主表
+          columns:
+            - id (PK)
+            - employee_no
+            - name
+            - gender
+            - id_card
+            - phone
+            - org_unit_id (FK)
+            - employee_type
+            - salary_mode
+            - hire_date
+            - is_active
+            - tags (JSON)
+            - created_at
+            - updated_at
+        - name: sys_user
+          description: 系统用户表（员工登录账号）
+        - name: sys_user_role
+          description: 用户角色关联表
+        - name: sys_post
+          description: 岗位表
+
+    menuKey: employee-list
+    permissionCode: page.employee.list
+
+  # ========================================
+  # 组织架构管理模块
+  # ========================================
+  - id: org-unit
+    name: 组织架构管理
+    nameEn: Organization Unit Management
+    category: 人事管理
+    description: 管理组织单元、部门、岗位等
+
+    frontend:
+      pages:
+        - path: src/views/org/OrgUnitList.vue
+          name: 组织单元列表
+          route: /org-units
+          componentName: OrgUnitList
+          description: 组织树形列表，支持CRUD操作
+          lists:
+            - name: 组织树形列表
+              dataKey: treeData
+              type: tree
+              columns:
+                - name: name
+                  title: 组织名称
+                - name: code
+                  title: 组织编码
+                - name: managerName
+                  title: 负责人
+                - name: employeeCount
+                  title: 员工数
+                - name: isActive
+                  title: 状态
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.org.create
+                text: 新增组织
+                icon: PlusOutlined
+                action: showAddModal
+                type: primary
+              - permission: button.org.import
+                text: 批量导入
+                icon: UploadOutlined
+                action: handleBatchImport
+              - permission: button.org.export
+                text: 批量导出
+                icon: DownloadOutlined
+                action: handleBatchExport
+            treeContextMenu:
+              - permission: button.org.create
+                text: 新增子节点
+                key: add-child
+                action: handleAddChild
+              - permission: button.org.edit
+                text: 编辑
+                key: edit
+                action: handleEditFromTree
+              - permission: button.org.delete
+                text: 删除
+                key: delete
+                action: handleDeleteFromTree
+                danger: true
+            rowActions:
+              - permission: button.org.edit
+                text: 编辑
+                action: handleEdit
+              - permission: button.org.enable
+                text: 启用
+                action: handleEnable
+                condition: record.isActive === false
+              - permission: button.org.disable
+                text: 停用
+                action: handleDisable
+                danger: true
+                condition: record.isActive === true
+              - permission: button.org.delete
+                text: 删除
+                action: handleDelete
+                danger: true
+
+        - path: src/views/org/OrgUnitManagement.vue
+          name: 组织管理
+          route: /org-units/management
+
+        - path: src/views/org/OrgChartView.vue
+          name: 组织图
+          route: /org-units/management/chart
+          componentName: OrgChartView
+          description: 可视化组织架构图
+
+        - path: src/views/org/OrgTreeBranch.vue
+          name: 组织分支
+          route: /org-units/tree-branch
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - getOrgTree
+          - getOrgUnit
+          - createOrgUnit
+          - updateOrgUnit
+          - deleteOrgUnit
+          - batchImportOrgUnits
+          - batchExportOrgUnits
+          - enableOrgUnit
+          - disableOrgUnit
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/OrgUnitsController.cs
+          methods:
+            - GET /api/v1/org-units/tree
+            - GET /api/v1/org-units/{id}
+            - POST /api/v1/org-units
+            - PUT /api/v1/org-units/{id}
+            - DELETE /api/v1/org-units/{id}
+            - POST /api/v1/org-units/{id}/enable
+            - POST /api/v1/org-units/{id}/disable
+      services:
+        - path: src/HRMS.Application/Services/OrgUnitService.cs
+      repositories:
+        - path: src/HRMS.Infrastructure/Repositories/OrgUnitRepository.cs
+        - path: src/HRMS.Domain/Interfaces/IOrgUnitRepository.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/OrgUnit.cs
+          tableName: sys_org_unit
+
+    database:
+      tables:
+        - name: sys_org_unit
+          description: 组织单元表
+          columns:
+            - id (PK)
+            - parent_id
+            - name
+            - code
+            - manager_id
+            - is_active
+            - sort_order
+        - name: sys_post
+          description: 岗位表
+
+    menuKey: org-unit-list
+    permissionCode: page.org.unit
+
+  # ========================================
+  # 考勤管理模块
+  # ========================================
+  - id: timesheet
+    name: 考勤管理
+    nameEn: Timesheet Management
+    category: 考勤薪资
+    description: 管理员工考勤数据、导入、审批等
+
+    frontend:
+      pages:
+        - path: src/views/timesheet/TimesheetList.vue
+          name: 考勤列表
+          route: /timesheets
+          componentName: TimesheetList
+          lists:
+            - name: 考勤记录列表
+              dataKey: data
+              pagination: true
+              rowKey: id
+              columns:
+                - name: employeeNo
+                  title: 工号
+                - name: employeeName
+                  title: 姓名
+                - name: date
+                  title: 日期
+                - name: checkIn
+                  title: 签到时间
+                - name: checkOut
+                  title: 签退时间
+                - name: status
+                  title: 状态
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.timesheet.create
+                text: 新增考勤
+                icon: PlusOutlined
+                action: showAddModal
+                type: primary
+              - permission: page.timesheet.import
+                text: 导入
+                icon: UploadOutlined
+                action: (路由跳转 /timesheets/import)
+              - permission: button.timesheet.approve
+                text: 审批
+                icon: CheckOutlined
+                action: handleApprove
+            rowActions:
+              - permission: button.timesheet.approve
+                text: 审批
+                action: handleApprove
+
+        - path: src/views/timesheet/TimesheetImport.vue
+          name: 考勤导入
+          route: /timesheets/import
+          componentName: TimesheetImport
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - timesheetApi.getTimesheets
+          - timesheetApi.createTimesheet
+          - timesheetApi.approveTimesheet
+          - timesheetApi.importTimesheets
+          - timesheetApi.exportTimesheets
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/TimesheetsController.cs
+      services:
+        - path: src/HRMS.Application/Services/TimesheetService.cs
+      repositories:
+        - path: src/HRMS.Infrastructure/Repositories/TimesheetRepository.cs
+        - path: src/HRMS.Domain/Interfaces/ITimesheetRepository.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/Timesheet.cs
+          tableName: timesheet
+
+    database:
+      tables:
+        - name: timesheet
+          description: 考勤记录表
+        - name: timesheet_detail
+          description: 考勤明细表
+
+    menuKey: timesheet-list
+    permissionCode: page.timesheet
+
+  # ========================================
+  # 薪资管理模块
+  # ========================================
+  - id: salary
+    name: 薪资管理
+    nameEn: Salary Management
+    category: 考勤薪资
+    description: 薪资计算、规则配置、薪资单生成等
+
+    frontend:
+      pages:
+        - path: src/views/salary/SalaryList.vue
+          name: 薪资列表
+          route: /salary
+          componentName: SalaryList
+          description: 薪资单列表，支持计算、审批、生成工资条
+          lists:
+            - name: 薪资单列表
+              dataKey: data
+              pagination: true
+              rowKey: id
+              columns:
+                - name: runNo
+                  title: 薪资单号
+                - name: period
+                  title: 薪资期间
+                - name: employeeCount
+                  title: 员工数
+                - name: totalAmount
+                  title: 总金额
+                - name: status
+                  title: 状态
+                - name: createdAt
+                  title: 创建时间
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: page.salary.calculate
+                text: 薪资计算
+                icon: CalculatorOutlined
+                action: (路由跳转 /salary/calculate)
+                type: primary
+              - permission: button.salary.approve
+                text: 审批
+                icon: CheckOutlined
+                action: handleApprove
+              - permission: button.salary.generatePayslip
+                text: 生成工资条
+                icon: FileTextOutlined
+                action: handleGeneratePayslip
+              - permission: button.salary.adjust
+                text: 调整
+                icon: EditOutlined
+                action: handleAdjust
+            rowActions:
+              - permission: button.salary.approve
+                text: 审批
+                action: handleApprove
+              - permission: button.salary.generatePayslip
+                text: 生成工资条
+                action: handleGeneratePayslip
+              - permission: button.salary.adjust
+                text: 调整
+                action: handleAdjust
+
+        - path: src/views/salary/SalaryCalculate.vue
+          name: 薪资计算
+          route: /salary/calculate
+          componentName: SalaryCalculate
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - salaryApi.getSalaryList
+          - salaryApi.calculateSalary
+          - salaryApi.approveSalary
+          - salaryApi.generatePayslip
+          - salaryApi.adjustSalary
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/SalaryController.cs
+      services:
+        - path: src/HRMS.Application/Services/SalaryCalculationService.cs
+        - path: src/HRMS.Application/Services/SalaryRuleService.cs
+        - path: src/HRMS.Application/Services/SalaryAdjustmentService.cs
+      repositories:
+        - path: src/HRMS.Infrastructure/Repositories/SalaryCalculationRepository.cs
+        - path: src/HRMS.Domain/Interfaces/ISalaryCalculationRepository.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/SalaryCalculation.cs
+        - path: src/HRMS.Domain/Entities/Payslip.cs
+
+    database:
+      tables:
+        - name: salary_calculation
+          description: 薪资计算表
+        - name: payslip
+          description: 工资条表
+        - name: salary_rule
+          description: 薪资规则表
+        - name: salary_adjustment
+          description: 薪资调整表
+
+    menuKey: salary-list
+    permissionCode: page.salary
+
+  # ========================================
+  # 薪资核算模块（薪资单/工资条）
+  # ========================================
+  - id: payroll
+    name: 薪资核算
+    nameEn: Payroll Run
+    category: 考勤薪资
+    description: 薪资核算批次、薪资配置、考勤关联等
+
+    frontend:
+      pages:
+        - path: src/views/payroll/PayrollRunList.vue
+          name: 薪资核算列表
+          route: /payroll/run
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - payrollRunApi
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/PayrollRunController.cs
+          methods:
+            - GET /api/v1/payroll/runs
+            - POST /api/v1/payroll/runs
+            - POST /api/v1/payroll/runs/{id}/calculate
+            - POST /api/v1/payroll/runs/{id}/approve
+        - path: src/HRMS.API/Controllers/PayrollConfigController.cs
+        - path: src/HRMS.API/Controllers/PayrollAdjustmentController.cs
+        - path: src/HRMS.API/Controllers/PayrollAttendanceController.cs
+        - path: src/HRMS.API/Controllers/PayrollProfileController.cs
+      services:
+        - path: src/HRMS.Application/Services/PayrollCalculationService.cs
+        - path: src/HRMS.Application/Services/PayrollConfigServices.cs
+        - path: src/HRMS.Application/Services/EmployeePayrollProfileService.cs
+      repositories:
+        - path: src/HRMS.Infrastructure/Repositories/PayrollRepositories.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/PayrollModels.cs
+        - path: src/HRMS.Domain/Entities/PayrollRun.cs
+        - path: src/HRMS.Domain/Entities/PayrollProfile.cs
+
+    database:
+      tables:
+        - name: payroll_run
+          description: 薪资核算批次表
+        - name: payroll_profile
+          description: 员工薪资档案表
+        - name: payroll_adjustment
+          description: 薪资调整表
+        - name: payroll_attendance
+          description: 薪资考勤关联表
+
+    menuKey: payroll-run
+    permissionCode: page.payroll.run
+
+  # ========================================
+  # 系统配置模块
+  # ========================================
+  - id: settings
+    name: 系统配置
+    nameEn: System Settings
+    category: 系统管理
+    description: 系统参数配置
+
+    frontend:
+      pages:
+        - path: src/views/settings/Settings.vue
+          name: 系统设置
+          route: /settings
+          componentName: Settings
+
+        - path: src/views/config/ConfigManagement.vue
+          name: 配置管理
+          route: /config
+          componentName: ConfigManagement
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/SettingsController.cs
+      services:
+        - path: src/HRMS.API/Services/SettingsService.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/SysConfigParam.cs
+
+    database:
+      tables:
+        - name: sys_config_param
+          description: 系统配置参数表
+
+    menuKey: settings-page
+    permissionCode: page.settings
+
+  # ========================================
+  # 权限管理模块
+  # ========================================
+  - id: access-control
+    name: 权限管理
+    nameEn: Access Control
+    category: 系统管理
+    description: 用户、角色、岗位、菜单管理
+
+    frontend:
+      pages:
+        - path: src/views/access/UserManagement.vue
+          name: 用户管理
+          route: /access/users
+          componentName: UserManagement
+          description: 系统用户CRUD
+          lists:
+            - name: 用户列表
+              dataKey: data
+              pagination: true
+              rowKey: id
+              columns:
+                - name: username
+                  title: 用户名
+                - name: name
+                  title: 姓名
+                - name: email
+                  title: 邮箱
+                - name: isActive
+                  title: 状态
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.access.user.create
+                text: 新增用户
+                icon: PlusOutlined
+                action: openCreateModal
+                type: primary
+            rowActions:
+              - permission: button.access.user.edit
+                text: 编辑
+                action: openEditModal
+              - permission: button.access.user.delete
+                text: 删除
+                action: handleDelete
+                danger: true
+
+        - path: src/views/access/RoleManagement.vue
+          name: 角色管理
+          route: /access/roles
+          componentName: RoleManagement
+          description: 角色CRUD、权限分配
+          lists:
+            - name: 角色列表
+              dataKey: data
+              pagination: true
+              rowKey: id
+              columns:
+                - name: roleName
+                  title: 角色名称
+                - name: roleCode
+                  title: 角色编码
+                - name: description
+                  title: 描述
+                - name: isActive
+                  title: 状态
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.access.role.create
+                text: 新增角色
+                icon: PlusOutlined
+                action: openCreateModal
+                type: primary
+            rowActions:
+              - permission: button.access.role.edit
+                text: 编辑
+                action: openEditModal
+              - permission: button.access.role.assign
+                text: 分配权限
+                action: openPermissionDrawer
+              - permission: button.access.role.assign
+                text: 复制权限
+                action: openCopyModal
+              - permission: button.access.role.delete
+                text: 删除
+                action: handleDelete
+                danger: true
+
+        - path: src/views/access/PostManagement.vue
+          name: 岗位管理
+          route: /access/posts
+          componentName: PostManagement
+
+        - path: src/views/access/MenuManagement.vue
+          name: 菜单管理
+          route: /access/menus
+          componentName: MenuManagement
+          description: 菜单树形管理、排序
+          lists:
+            - name: 菜单树
+              dataKey: menuTree
+              type: tree
+              columns:
+                - name: menuName
+                  title: 菜单名称
+                - name: menuKey
+                  title: 菜单Key
+                - name: routePath
+                  title: 路由路径
+                - name: permissionCode
+                  title: 权限码
+                - name: sortOrder
+                  title: 排序
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.access.menu.create
+                text: 新增菜单
+                icon: PlusOutlined
+                action: openCreateModal
+                type: primary
+            rowActions:
+              - permission: button.access.menu.edit
+                text: 排序
+                action: openSortModal
+              - permission: button.access.menu.create
+                text: 新增子节点
+                action: openCreateModal
+              - permission: button.access.menu.edit
+                text: 编辑
+                action: openEditModal
+              - permission: button.access.menu.delete
+                text: 删除
+                action: handleDelete
+                danger: true
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - accessApi.getUsers
+          - accessApi.createUser
+          - accessApi.updateUser
+          - accessApi.deleteUser
+          - accessApi.getRoles
+          - accessApi.createRole
+          - accessApi.updateRole
+          - accessApi.deleteRole
+          - accessApi.assignPermissions
+          - accessApi.getMenus
+          - accessApi.createMenu
+          - accessApi.updateMenu
+          - accessApi.deleteMenu
+          - accessApi.sortMenu
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/AccessController.cs
+          methods:
+            - GET /api/v1/access/users
+            - POST /api/v1/access/users
+            - PUT /api/v1/access/users/{id}
+            - DELETE /api/v1/access/users/{id}
+            - GET /api/v1/access/roles
+            - POST /api/v1/access/roles
+            - PUT /api/v1/access/roles/{id}
+            - DELETE /api/v1/access/roles/{id}
+            - POST /api/v1/access/roles/{id}/permissions
+            - GET /api/v1/access/menus
+            - POST /api/v1/access/menus
+            - PUT /api/v1/access/menus/{id}
+            - DELETE /api/v1/access/menus/{id}
+            - PUT /api/v1/access/menus/sort
+        - path: src/HRMS.API/Controllers/AuthController.cs
+      services:
+        - path: src/HRMS.API/Services/AccessControlService.cs
+        - path: src/HRMS.API/Services/RbacDataInitializer.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/SysUser.cs
+        - path: src/HRMS.Domain/Entities/SysRole.cs
+        - path: src/HRMS.Domain/Entities/SysMenu.cs
+        - path: src/HRMS.Domain/Entities/SysRolePermission.cs
+        - path: src/HRMS.Domain/Entities/SysPost.cs
+        - path: src/HRMS.Domain/Entities/SysPostPermission.cs
+        - path: src/HRMS.Domain/Entities/SysUserRole.cs
+
+    database:
+      tables:
+        - name: sys_user
+        - name: sys_role
+        - name: sys_menu
+        - name: sys_user_role
+        - name: sys_role_permission
+        - name: sys_post
+        - name: sys_post_permission
+        - name: sys_token_session
+
+    menuKey: access-control-page
+    permissionCode: page.access.control
+
+  # ========================================
+  # 待办中心模块
+  # ========================================
+  - id: todo-center
+    name: 待办中心
+    nameEn: Todo Center
+    category: 流程管理
+    description: 待办任务查看、处理、代理等
+
+    frontend:
+      pages:
+        - path: src/views/workflow/TodoCenter.vue
+          name: 待办中心
+          route: /workflow/todo
+          componentName: TodoCenter
+          description: 待办任务列表，支持完成、驳回、转交、催办
+          lists:
+            - name: 待办任务列表
+              dataKey: tasks
+              pagination: true
+              rowKey: id
+              columns:
+                - name: taskNo
+                  title: 任务编号
+                - name: taskTypeCode
+                  title: 任务类型
+                - name: title
+                  title: 标题
+                - name: businessType
+                  title: 业务类型
+                - name: businessId
+                  title: 业务单号
+                - name: processInstanceId
+                  title: 流程实例
+                - name: priority
+                  title: 优先级
+                - name: status
+                  title: 状态
+                - name: createdTime
+                  title: 创建时间
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - permission: button.todo.batchComplete
+                text: 批量完成
+                icon: CheckOutlined
+                action: handleBatchComplete
+                condition: selectedRows.length > 0
+              - permission: button.todo.batchReject
+                text: 批量驳回
+                icon: CloseOutlined
+                action: handleBatchReject
+                danger: true
+                condition: selectedRows.length > 0
+              - permission: button.todo.agent
+                text: 代理设置
+                icon: SwapOutlined
+                action: (打开代理表单)
+            rowActions:
+              - permission: button.todo.complete
+                text: 完成
+                action: handleComplete
+              - permission: button.todo.reject
+                text: 驳回
+                action: handleReject
+                danger: true
+              - permission: button.todo.transfer
+                text: 转交
+                action: handleTransfer
+              - permission: button.todo.urge
+                text: 催办
+                action: handleUrge
+            agentForm:
+              - permission: button.todo.agent
+                text: 代理设置
+                type: primary
+                action: 打开代理设置表单
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - todoCenterApi.getMyTasks
+          - todoCenterApi.completeTask
+          - todoCenterApi.rejectTask
+          - todoCenterApi.transferTask
+          - todoCenterApi.urgeTask
+          - todoCenterApi.batchComplete
+          - todoCenterApi.batchReject
+          - todoCenterApi.getAgentSettings
+          - todoCenterApi.createAgentSetting
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/TodoCenterController.cs
+          methods:
+            - GET /api/v1/todo/tasks/my-tasks
+            - POST /api/v1/todo/tasks/{id}/complete
+            - POST /api/v1/todo/tasks/{id}/reject
+            - POST /api/v1/todo/tasks/{id}/transfer
+            - POST /api/v1/todo/tasks/{id}/urge
+            - POST /api/v1/todo/tasks/batch-complete
+            - POST /api/v1/todo/tasks/batch-reject
+            - GET /api/v1/todo/agent/settings
+            - POST /api/v1/todo/agent/settings
+      gateways:
+        - path: src/HRMS.API/Services/WorkflowCenterGateway.cs
+          interface: ITodoCenterGateway
+      microservices:
+        - path: src/TodoCenter.API/
+          description: TodoCenter.API 微服务
+
+    database:
+      tables:
+        - name: todo_task
+          description: 待办任务表
+          columns:
+            - id (PK)
+            - task_no
+            - task_type_code
+            - title
+            - business_type
+            - business_id
+            - process_instance_id
+            - process_node_id
+            - assignee_id
+            - assignee_name
+            - priority
+            - status
+            - source_payload
+            - created_time
+            - completed_time
+        - name: todo_agent_setting
+          description: 待办代理设置表
+
+    menuKey: todo-center-page
+    permissionCode: page.todo.center
+
+  # ========================================
+  # 流程中心模块
+  # ========================================
+  - id: process-center
+    name: 流程中心
+    nameEn: Process Center
+    category: 流程管理
+    description: 流程定义管理、流程实例监控、驳回、终止等
+
+    frontend:
+      pages:
+        - path: src/views/workflow/ProcessCenter.vue
+          name: 流程中心
+          route: /workflow/processes
+          componentName: ProcessCenter
+          description: 流程定义列表、实例列表，支持驳回、终止、重建待办
+          lists:
+            - name: 流程定义标签列表
+              dataKey: definitions
+              type: tags
+            - name: 流程实例列表
+              dataKey: instances
+              pagination: true
+              rowKey: id
+              columns:
+                - name: instanceNo
+                  title: 实例编号
+                - name: processCode
+                  title: 流程编码
+                - name: title
+                  title: 标题
+                - name: businessType
+                  title: 业务类型
+                - name: businessId
+                  title: 业务单号
+                - name: currentNodeName
+                  title: 当前节点
+                - name: currentTodo
+                  title: 当前审批人
+                - name: starterName
+                  title: 发起人
+                - name: status
+                  title: 状态
+                - name: startedTime
+                  title: 发起时间
+                - name: finishedTime
+                  title: 完成时间
+                - name: action
+                  title: 操作
+          buttons:
+            toolbar:
+              - (无全局按钮，通过选择流程定义过滤)
+            rowActions:
+              - text: 详情
+                action: openDetail
+              - permission: button.process.reject
+                text: 驳回
+                action: handleReject
+                danger: true
+              - permission: button.process.rebuildTodo
+                text: 重建待办
+                action: handleRebuildTodo
+              - permission: button.process.terminate
+                text: 终止
+                action: handleTerminate
+                danger: true
+          detailDrawer:
+            - name: 基本信息
+              type: descriptions
+            - name: 流转轨迹
+              type: timeline
+            - name: 扩展数据
+              type: json
+            - name: 业务回调日志
+              type: table
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - processCenterApi.getDefinitions
+          - processCenterApi.getInstances
+          - processCenterApi.getInstance
+          - processCenterApi.rejectInstance
+          - processCenterApi.rebuildCurrentTodo
+          - processCenterApi.terminateInstance
+          - processCenterApi.getCallbackLogs
+          - processCenterApi.retryCallback
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/ProcessCenterController.cs
+          methods:
+            - GET /api/v1/process/definitions
+            - GET /api/v1/process/instances
+            - GET /api/v1/process/instances/{id}
+            - POST /api/v1/process/instances/{id}/reject
+            - POST /api/v1/process/instances/{id}/rebuild-current-todo
+            - POST /api/v1/process/instances/{id}/terminate
+            - GET /api/v1/process/instances/{id}/callback-logs
+            - POST /api/v1/process/instances/{id}/callback-logs/{logId}/retry
+      gateways:
+        - path: src/HRMS.API/Services/WorkflowCenterGateway.cs
+          interface: IWorkflowProcessCenterGateway
+      microservices:
+        - path: src/ProcessCenter.API/
+          description: ProcessCenter.API 微服务
+
+    database:
+      tables:
+        - name: process_definition
+          description: 流程定义表
+        - name: process_definition_node
+          description: 流程节点定义表
+        - name: process_instance
+          description: 流程实例表
+        - name: process_history
+          description: 流程历史表
+        - name: process_callback_log
+          description: 流程回调日志表
+
+    menuKey: process-center-page
+    permissionCode: page.process.center
+
+  # ========================================
+  # 流程设计器模块
+  # ========================================
+  - id: process-designer
+    name: 流程设计器
+    nameEn: Process Designer
+    category: 流程管理
+    description: 可视化BPMN流程设计器
+
+    frontend:
+      pages:
+        - path: src/views/workflow/ProcessDesigner.vue
+          name: 流程设计器
+          route: /workflow/designer
+          componentName: ProcessDesigner
+          description: 基于bpmn-js的可视化流程设计器
+          features:
+            - 节点拖拽（开始事件、结束事件、用户任务、服务任务、网关）
+            - 流程模板（简单审批流、多级审批流、条件分支流、费用申请流）
+            - 节点属性编辑（名称、类型、审批人、优先级等）
+            - 撤销/重做
+            - 缩放控制
+            - 保存/发布
+          panels:
+            - name: 左侧面板
+              type: palette
+              content: 基础节点、常用模板
+            - name: 中间画布
+              type: canvas
+              content: BPMN流程图
+            - name: 右侧面板
+              type: properties
+              content: 流程属性、节点属性
+          templates:
+            - name: 简单审批流
+              key: simple
+              description: 开始 -> 审批 -> 结束
+            - name: 多级审批流
+              key: approval
+              description: 开始 -> 经理审批 -> 总监审批 -> 人事审批 -> 结束
+            - name: 条件分支流
+              key: branch
+              description: 开始 -> 条件判断 -> (经理审批|自动处理) -> 结束
+            - name: 费用申请流
+              key: expense
+              description: 开始 -> 填写费用 -> 金额判断 -> (部门|分公司|总公司)审批 -> 结束
+              conditions:
+                - expression: "amount <= 1000"
+                  target: 部门审批
+                - expression: "amount > 1000 && amount <= 5000"
+                  target: 分公司审批
+                - expression: "amount > 5000"
+                  target: 总公司审批
+          businessTypes:
+            - value: Leave
+              label: 请假审批
+            - value: Payroll
+              label: 薪资核算
+            - value: Expense
+              label: 费用申请
+            - value: Purchase
+              label: 采购申请
+            - value: Reimbursement
+              label: 报销申请
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - processCenterApi.getDefinition
+          - processCenterApi.saveDefinition
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/ProcessCenterController.cs
+          methods:
+            - GET /api/v1/process/definitions/{id}
+            - POST /api/v1/process/definitions
+            - PUT /api/v1/process/definitions/{id}
+      gateways:
+        - path: src/HRMS.API/Services/WorkflowCenterGateway.cs
+          interface: IWorkflowProcessCenterGateway
+          methods:
+            - GetDefinitionAsync
+            - SaveDefinitionAsync
+      microservices:
+        - path: src/ProcessCenter.API/
+      dependencies:
+        - name: bpmn-js
+          type: npm package
+          version: latest
+        - name: bpmn-js-properties-panel
+          type: npm package
+        - name: @bpmn-io/properties-panel
+          type: npm package
+        - name: micromodal
+          type: npm package
+
+    database:
+      tables:
+        - name: process_definition
+          description: 流程定义表
+        - name: process_definition_node
+          description: 流程节点定义表
+
+    menuKey: process-designer-page
+    permissionCode: page.process.designer
+
+  # ========================================
+  # 第三方账单模块
+  # ========================================
+  - id: third-party-bill
+    name: 第三方账单
+    nameEn: Third Party Bills
+    category: 财务管理
+    description: 第三方账单管理
+
+    frontend:
+      pages:
+        - path: src/views/thirdparty/ThirdPartyBillList.vue
+          name: 第三方账单
+          route: /third-party-bills
+
+    apiFiles:
+      - path: src/api/index.js
+        functions:
+          - thirdPartyBillApi.getAll
+          - thirdPartyBillApi.getById
+          - thirdPartyBillApi.generate
+
+    backend:
+      controllers:
+        - path: src/HRMS.API/Controllers/ThirdPartyBillsController.cs
+      services:
+        - path: src/HRMS.Application/Services/ThirdPartyBillService.cs
+      repositories:
+        - path: src/HRMS.Infrastructure/Repositories/ThirdPartyBillRepository.cs
+        - path: src/HRMS.Domain/Interfaces/IThirdPartyBillRepository.cs
+      entities:
+        - path: src/HRMS.Domain/Entities/ThirdPartyBill.cs
+        - path: src/HRMS.Domain/Entities/ThirdPartyBillDetail.cs
+
+    database:
+      tables:
+        - name: third_party_bill
+        - name: third_party_bill_detail
+        - name: product
+        - name: output_record
+
+    menuKey: third-party-bill-page
+    permissionCode: page.third.party.bill
+
+  # ========================================
+  # 报表中心模块
+  # ========================================
+  - id: reports
+    name: 报表中心
+    nameEn: Reports Center
+    category: 统计分析
+    description: 数据报表和可视化
+
+    frontend:
+      pages:
+        - path: src/views/reports/Reports.vue
+          name: 报表中心
+          route: /reports
+          componentName: Reports
+
+    menuKey: reports-page
+    permissionCode: page.reports
+
+# ========================================
+# 全局共享/基础设施
+# ========================================
+shared:
+  # 通用实体
+  entities:
+    - path: src/HRMS.Domain/Entities/SysUser.cs
+    - path: src/HRMS.Domain/Entities/SysRole.cs
+    - path: src/HRMS.Domain/Entities/SysMenu.cs
+    - path: src/HRMS.Domain/Entities/SysPost.cs
+    - path: src/HRMS.Domain/Entities/SysConfigParam.cs
+
+  # 数据库上下文
+  dbContexts:
+    - path: src/HRMS.Infrastructure/Data/HrmsDbContext.cs
+      description: HRMS主数据库上下文
+    - path: src/ProcessCenter.API/Data/ProcessDbContext.cs
+      description: 流程中心数据库上下文
+    - path: src/TodoCenter.API/Data/TodoDbContext.cs
+      description: 待办中心数据库上下文
+
+  # 枚举定义
+  enums:
+    - path: src/HRMS.Domain/Enums/Enums.cs
+
+  # API 入口
+  apiEntry: src/HRMS.API/Program.cs
+
+# ========================================
+# 权限码速查表
+# ========================================
+permissionCodes:
+  pages:
+    - page.employee.list
+    - page.org.chart
+    - page.org.unit
+    - page.timesheet
+    - page.timesheet.import
+    - page.salary
+    - page.salary.calculate
+    - page.payroll.run
+    - page.settings
+    - page.access.control
+    - page.todo.center
+    - page.process.center
+    - page.process.designer
+    - page.third.party.bill
+    - page.reports
+
+  buttons:
+    # 员工相关
+    - button.employee.create
+    - button.employee.edit
+    - button.employee.delete
+    - button.employee.import
+    - button.employee.export
+    - button.employee.dismiss
+    - button.employee.resetPassword
+
+    # 组织相关
+    - button.org.create
+    - button.org.edit
+    - button.org.delete
+    - button.org.import
+    - button.org.export
+    - button.org.enable
+    - button.org.disable
+
+    # 考勤相关
+    - button.timesheet.create
+    - button.timesheet.approve
+
+    # 薪资相关
+    - button.salary.approve
+    - button.salary.generatePayslip
+    - button.salary.adjust
+
+    # 待办相关
+    - button.todo.complete
+    - button.todo.reject
+    - button.todo.transfer
+    - button.todo.urge
+    - button.todo.batchComplete
+    - button.todo.batchReject
+    - button.todo.agent
+
+    # 流程相关
+    - button.process.reject
+    - button.process.terminate
+    - button.process.rebuildTodo
+
+    # 权限管理相关
+    - button.access.user.create
+    - button.access.user.edit
+    - button.access.user.delete
+    - button.access.role.create
+    - button.access.role.edit
+    - button.access.role.delete
+    - button.access.role.assign
+    - button.access.menu.create
+    - button.access.menu.edit
+    - button.access.menu.delete
+
+# ========================================
+# 操作规则说明
+# ========================================
+operation_rules:
+  description: |
+    当收到用户的指令时，按照以下规则操作：
+
+    1. 识别模块名称：
+       - "员工" 或 "花名册" → employee
+       - "组织" 或 "架构" → org-unit
+       - "考勤" → timesheet
+       - "薪资" → salary 或 payroll
+       - "待办" → todo-center
+       - "流程" 或 "审批" → process-center 或 process-designer
+       - "权限" 或 "用户" 或 "角色" → access-control
+       - "配置" 或 "系统设置" → settings
+
+    2. 定位文件：
+       - 前端页面：查找 modules[?id=<module_id>].frontend.pages
+       - 后端控制器：查找 modules[?id=<module_id>].backend.controllers
+       - 数据库表：查找 modules[?id=<module_id>].database.tables
+
+    3. 执行操作：
+       - 添加功能 → 在 frontend.pages + backend.controllers + database.tables 中添加
+       - 修改功能 → 定位具体文件后修改
+       - 删除功能 → 从上述三个位置删除
+
+    4. 跨模块操作：
+       - 如果操作涉及多个模块，明确告知用户
+       - 例如：薪资计算可能涉及 salary + payroll + todo-center
+
+  examples:
+    - instruction: "在【薪资计算模块】中添加一个字段：社保基数"
+      actions:
+        - module: salary
+          files:
+            - frontend: src/views/salary/SalaryCalculate.vue
+            - backend: src/HRMS.Application/Services/SalaryCalculationService.cs
+            - entity: src/HRMS.Domain/Entities/SalaryCalculation.cs
+            - database: salary_calculation 表添加 social_security_base 字段
+          cross_module_warning: false
+
+    - instruction: "打开【组织架构模块】的页面"
+      actions:
+        - module: org-unit
+          files:
+            - src/views/org/OrgUnitList.vue
+            - src/views/org/OrgChartView.vue
+
+    - instruction: "修改【待办中心】的数据库字段"
+      actions:
+        - module: todo-center
+          files:
+            - database: todo_task 表
+            - entity: src/TodoCenter.API/Models/TodoEntities.cs
+
+    - instruction: "在【员工花名册】添加一个【导出员工画像】按钮"
+      actions:
+        - module: employee
+          files:
+            - frontend: src/views/employee/EmployeeList.vue (toolbar.buttons)
+            - backend: src/HRMS.API/Controllers/EmployeesController.cs
+            - permission: button.employee.exportPortrait (新增)

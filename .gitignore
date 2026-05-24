@@ -1,0 +1,32 @@
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vs/
+.vscode/*.log
+
+# Node / Vite
+hrms-web/node_modules/
+hrms-web/dist/
+hrms-web/test-results/
+hrms-web/playwright-report/
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# Local runtime artifacts
+.dbg/
+.trae/tmp/
+.trae-temp-build/
+
+# Logs
+*.log
+
+# Local app settings
+src/*/appsettings.Development.json
+
+# OS / temp files
+*.tmp
+*.temp

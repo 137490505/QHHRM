@@ -1,0 +1,225 @@
+namespace HRMS.Domain.Entities;
+
+public class PayrollEmployeeType
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string TypeCode { get; set; } = string.Empty;
+    public string TypeName { get; set; } = string.Empty;
+    public string SalaryMode { get; set; } = string.Empty;
+    public bool HasOvertime { get; set; }
+    public bool HasMealSubsidy { get; set; }
+    public bool HasNightSubsidy { get; set; }
+    public bool HasPerformance { get; set; }
+    public bool HasSocialSecurity { get; set; }
+    public bool IsActive { get; set; } = true;
+    public int SortOrder { get; set; }
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class EmployeePayrollProfile
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+    public Guid EmployeeTypeId { get; set; }
+    public PayrollEmployeeType? EmployeeType { get; set; }
+    public string? ShiftType { get; set; }
+    public string? BankAccount { get; set; }
+    public string PayrollStatus { get; set; } = "Active";
+    public DateTime? JoinPayrollDate { get; set; }
+    public DateTime? LeavePayrollDate { get; set; }
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class SalaryRule
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string RuleCode { get; set; } = string.Empty;
+    public string RuleName { get; set; } = string.Empty;
+    public Guid EmployeeTypeId { get; set; }
+    public PayrollEmployeeType? EmployeeType { get; set; }
+    public DateTime EffectiveStart { get; set; }
+    public DateTime? EffectiveEnd { get; set; }
+    public decimal? FixedSalary { get; set; }
+    public decimal? HourlyRate { get; set; }
+    public decimal? PieceworkUnitPrice { get; set; }
+    public decimal? BaseSalaryForPiecework { get; set; }
+    public decimal MealSubsidyPerDay { get; set; }
+    public decimal NightSubsidyPerDay { get; set; }
+    public decimal? PerformanceBase { get; set; }
+    public decimal DefaultOvertimeMultiplier { get; set; } = 1.5m;
+    public bool IsActive { get; set; } = true;
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class OvertimeRateConfig
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string ConfigCode { get; set; } = string.Empty;
+    public Guid EmployeeTypeId { get; set; }
+    public PayrollEmployeeType? EmployeeType { get; set; }
+    public string HolidayType { get; set; } = string.Empty;
+    public decimal Multiplier { get; set; }
+    public DateTime EffectiveStart { get; set; }
+    public DateTime? EffectiveEnd { get; set; }
+    public bool IsActive { get; set; } = true;
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class HolidayRule
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string HolidayCode { get; set; } = string.Empty;
+    public string HolidayName { get; set; } = string.Empty;
+    public DateTime HolidayDate { get; set; }
+    public string HolidayType { get; set; } = string.Empty;
+    public decimal? OvertimeMultiplier { get; set; }
+    public bool IsActive { get; set; } = true;
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class Attendance
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+    public DateTime WorkDate { get; set; }
+    public decimal NormalHours { get; set; }
+    public decimal OvertimeHours { get; set; }
+    public string? OvertimeType { get; set; }
+    public decimal PieceworkQty { get; set; }
+    public string? ShiftType { get; set; }
+    public bool IsNightShift { get; set; }
+    public string AttendanceSource { get; set; } = "Manual";
+    public string? SourceRecordId { get; set; }
+    public string Status { get; set; } = "Draft";
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class SalaryAdjustment
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+    public string YearMonth { get; set; } = string.Empty;
+    public string AdjustmentType { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public string SourceType { get; set; } = "Manual";
+    public string? SourceId { get; set; }
+    public bool IsAutoGenerated { get; set; }
+    public string? Remark { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string? UpdatedBy { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class IncomeTaxRule
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public int RuleYear { get; set; }
+    public int LevelNo { get; set; }
+    public decimal MinTaxableAmount { get; set; }
+    public decimal? MaxTaxableAmount { get; set; }
+    public decimal TaxRate { get; set; }
+    public decimal QuickDeduction { get; set; }
+    public decimal ThresholdAmount { get; set; } = 5000m;
+    public bool IsActive { get; set; } = true;
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class PayrollRun
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string RunNo { get; set; } = string.Empty;
+    public string YearMonth { get; set; } = string.Empty;
+    public string RunType { get; set; } = "Monthly";
+    public string Status { get; set; } = "Draft";
+    public string? EmployeeScopeJson { get; set; }
+    public string? RuleSnapshotJson { get; set; }
+    public string? TriggeredBy { get; set; }
+    public string? ApprovalProcessCode { get; set; }
+    public string? ApprovalProcessInstanceId { get; set; }
+    public string? ApprovalRequestId { get; set; }
+    public DateTime? ApprovalSubmittedAt { get; set; }
+    public string? ApprovedBy { get; set; }
+    public DateTime? ApprovedAt { get; set; }
+    public DateTime? StartedAt { get; set; }
+    public DateTime? FinishedAt { get; set; }
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+    public ICollection<Payroll> Payrolls { get; set; } = new List<Payroll>();
+}
+
+public class Payroll
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid PayrollRunId { get; set; }
+    public PayrollRun? PayrollRun { get; set; }
+    public Guid EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+    public Guid? EmployeeTypeId { get; set; }
+    public PayrollEmployeeType? EmployeeType { get; set; }
+    public string YearMonth { get; set; } = string.Empty;
+    public string EmployeeNoSnapshot { get; set; } = string.Empty;
+    public string EmployeeNameSnapshot { get; set; } = string.Empty;
+    public Guid? OrgUnitIdSnapshot { get; set; }
+    public string SalaryModeSnapshot { get; set; } = string.Empty;
+    public decimal NormalWage { get; set; }
+    public decimal OvertimeWage { get; set; }
+    public decimal PieceworkWage { get; set; }
+    public decimal FixedSalary { get; set; }
+    public decimal BaseSalary { get; set; }
+    public decimal MealSubsidy { get; set; }
+    public decimal NightSubsidy { get; set; }
+    public decimal PerformanceBonus { get; set; }
+    public decimal OtherAllowance { get; set; }
+    public decimal SocialSecurityEmployee { get; set; }
+    public decimal SocialSecurityCompany { get; set; }
+    public decimal ProvidentFundEmployee { get; set; }
+    public decimal ProvidentFundCompany { get; set; }
+    public decimal IncomeTax { get; set; }
+    public decimal OtherDeduction { get; set; }
+    public decimal TotalGross { get; set; }
+    public decimal NetSalary { get; set; }
+    public decimal TotalCompanyCost { get; set; }
+    public string Status { get; set; } = "Draft";
+    public DateTime? CalculatedAt { get; set; }
+    public DateTime? PaidAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+    public ICollection<PayrollDetail> Details { get; set; } = new List<PayrollDetail>();
+}
+
+public class PayrollDetail
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid PayrollId { get; set; }
+    public Payroll? Payroll { get; set; }
+    public string ComponentCode { get; set; } = string.Empty;
+    public string ComponentName { get; set; } = string.Empty;
+    public string ComponentCategory { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public decimal? Quantity { get; set; }
+    public decimal? UnitPrice { get; set; }
+    public int SortOrder { get; set; }
+    public string SourceType { get; set; } = "System";
+    public string? SourceId { get; set; }
+    public string? Remark { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}

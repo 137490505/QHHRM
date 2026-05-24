@@ -1,0 +1,542 @@
+{
+  "generatedAt": "2026-05-23T23:49:25.764Z",
+  "totalPages": 12,
+  "totalButtons": 41,
+  "pages": [
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\config\\ConfigManagement.vue",
+      "page": "config/ConfigManagement.vue",
+      "buttonCount": 1,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "新增选项",
+          "permissionCode": null,
+          "clickExpression": "showAddOptionModal",
+          "methodName": "showAddOptionModal",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" size=\"large\" @click=\"showAddOptionModal\"> <PlusOutlined /> 新增选项 </a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\Dashboard.vue",
+      "page": "Dashboard.vue",
+      "buttonCount": 4,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "刷新数据",
+          "permissionCode": null,
+          "clickExpression": "refreshData",
+          "methodName": "refreshData",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": true,
+          "sourceSnippet": "<a-button type=\"text\" @click=\"refreshData\"> <SyncOutlined /> 刷新数据 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "导出图片",
+          "permissionCode": null,
+          "clickExpression": "exportChart('trend')",
+          "methodName": "exportChart",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": true,
+          "sourceSnippet": "<a-button type=\"text\" @click=\"exportChart('trend')\"> <DownloadOutlined /> 导出图片 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "导出图片",
+          "permissionCode": null,
+          "clickExpression": "exportChart('salary')",
+          "methodName": "exportChart",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": true,
+          "sourceSnippet": "<a-button type=\"text\" @click=\"exportChart('salary')\"> <DownloadOutlined /> 导出图片 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "批量审批",
+          "permissionCode": null,
+          "clickExpression": "handleBatchApprove",
+          "methodName": "handleBatchApprove",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": true,
+          "sourceSnippet": "<a-button type=\"text\" @click=\"handleBatchApprove\" v-if=\"pendingTasks.length\"> 批量审批 </a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\employee\\EmployeeDetailView.vue",
+      "page": "employee/EmployeeDetailView.vue",
+      "buttonCount": 3,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "返回",
+          "permissionCode": null,
+          "clickExpression": "handleBack",
+          "methodName": "handleBack",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"handleBack\"> <ArrowLeftOutlined /> 返回 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "员工列表",
+          "permissionCode": null,
+          "clickExpression": "goEmployeeList",
+          "methodName": "goEmployeeList",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"goEmployeeList\"> 员工列表 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "刷新",
+          "permissionCode": null,
+          "clickExpression": "loadEmployeeDetail",
+          "methodName": "loadEmployeeDetail",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" :loading=\"loading\" @click=\"loadEmployeeDetail\"> <ReloadOutlined /> 刷新 </a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\employee\\EmployeeList.vue",
+      "page": "employee/EmployeeList.vue",
+      "buttonCount": 4,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "新增员工",
+          "permissionCode": "'button.employee.create'",
+          "clickExpression": "showAddModal",
+          "methodName": "showAddModal",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.employee.create'\" type=\"primary\" @click=\"showAddModal\"><PlusOutlined /> 新增员工</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "批量导入",
+          "permissionCode": "'button.employee.import'",
+          "clickExpression": "handleBatchImport",
+          "methodName": "handleBatchImport",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.employee.import'\" @click=\"handleBatchImport\"><UploadOutlined /> 批量导入</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "批量导出",
+          "permissionCode": "'button.employee.export'",
+          "clickExpression": "handleBatchExport",
+          "methodName": "handleBatchExport",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.employee.export'\" @click=\"handleBatchExport\"><DownloadOutlined /> 批量导出</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "刷新",
+          "permissionCode": null,
+          "clickExpression": "loadData",
+          "methodName": "loadData",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"loadData\"><SyncOutlined /> 刷新</a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\Layout.vue",
+      "page": "Layout.vue",
+      "buttonCount": 3,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "router",
+          "permissionCode": null,
+          "clickExpression": "router.go(0)",
+          "methodName": "router",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"text\" class=\"header-btn\" @click=\"router.go(0)\" title=\"刷新\"> <SyncOutlined /> </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "toggleTheme",
+          "permissionCode": null,
+          "clickExpression": "toggleTheme",
+          "methodName": "toggleTheme",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"text\" class=\"header-btn\" @click=\"toggleTheme\" title=\"主题切换\"> <SwapOutlined /> </a-button>"
+        },
+        {
+          "tagName": "a-menu-item",
+          "label": "退出登录",
+          "permissionCode": null,
+          "clickExpression": "handleLogout",
+          "methodName": "handleLogout",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-menu-item key=\"logout\" @click=\"handleLogout\"> <LogoutOutlined /> <span>退出登录</span> </a-menu-item>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\org\\OrgChartView.vue",
+      "page": "org/OrgChartView.vue",
+      "buttonCount": 2,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "返回",
+          "permissionCode": null,
+          "clickExpression": "router.back()",
+          "methodName": "router",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"router.back()\"> <ArrowLeftOutlined /> 返回 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "刷新",
+          "permissionCode": null,
+          "clickExpression": "loadChartData",
+          "methodName": "loadChartData",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" :loading=\"loading\" @click=\"loadChartData\"> <ReloadOutlined /> 刷新 </a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\org\\OrgTreeBranch.vue",
+      "page": "org/OrgTreeBranch.vue",
+      "buttonCount": 3,
+      "buttons": [
+        {
+          "tagName": "button",
+          "label": "{{ node.name }}",
+          "permissionCode": null,
+          "clickExpression": "$emit('select', node)",
+          "methodName": "$emit",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<button type=\"button\" class=\"node-name node-action\" @click=\"$emit('select', node)\" > {{ node.name }} </button>"
+        },
+        {
+          "tagName": "button",
+          "label": "{{ node.manager || '未设置负责人' }}",
+          "permissionCode": null,
+          "clickExpression": "$emit('select-manager', node)",
+          "methodName": "$emit",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<button type=\"button\" class=\"node-secondary node-action manager-action\" :disabled=\"!node.managerId\" @click=\"$emit('select-manager', node)\" > {{ node.manager || '未设置负责人' }} </button>"
+        },
+        {
+          "tagName": "button",
+          "label": "{{ isExpanded(node.id) ? '-' : '+' }}",
+          "permissionCode": null,
+          "clickExpression": "toggleNode(node.id)",
+          "methodName": "toggleNode",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<button v-if=\"node.children?.length\" type=\"button\" class=\"branch-toggle\" :aria-label=\"isExpanded(node.id) ? '收起下级组织' : '展开下级组织'\" @click=\"toggleNode(node.id)\" > {{ isExpanded(node.id) ? '-' : '+' }} </button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\org\\OrgUnitManagement.vue",
+      "page": "org/OrgUnitManagement.vue",
+      "buttonCount": 1,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "新增",
+          "permissionCode": null,
+          "clickExpression": "addNode",
+          "methodName": "addNode",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" size=\"small\" @click=\"addNode\"> <PlusOutlined /> 新增 </a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\salary\\SalaryCalculate.vue",
+      "page": "salary/SalaryCalculate.vue",
+      "buttonCount": 5,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "预核算",
+          "permissionCode": "'button.salary.calculate'",
+          "clickExpression": "handlePreCalculate",
+          "methodName": "handlePreCalculate",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.salary.calculate'\" type=\"primary\" :loading=\"calculating\" @click=\"handlePreCalculate\"> <CalculatorOutlined /> 预核算 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "确认核算",
+          "permissionCode": "'button.salary.calculate'",
+          "clickExpression": "handleConfirmCalculate",
+          "methodName": "handleConfirmCalculate",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.salary.calculate'\" v-if=\"hasPreResult\" type=\"primary\" danger @click=\"handleConfirmCalculate\" > <CheckCircleOutlined /> 确认核算 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "重置",
+          "permissionCode": null,
+          "clickExpression": "handleReset",
+          "methodName": "handleReset",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"handleReset\">重置</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "清除临时参数",
+          "permissionCode": null,
+          "clickExpression": "clearTempParams",
+          "methodName": "clearTempParams",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-if=\"hasTempParams\" type=\"text\" danger @click=\"clearTempParams\"> 清除临时参数 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "成本拆分预览",
+          "permissionCode": null,
+          "clickExpression": "showCostSplit = true",
+          "methodName": "showCostSplit",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"text\" @click=\"showCostSplit = true\">成本拆分预览</a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\salary\\SalaryList.vue",
+      "page": "salary/SalaryList.vue",
+      "buttonCount": 7,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "薪资核算",
+          "permissionCode": "'page.salary.calculate'",
+          "clickExpression": "$router.push('/salary/calculate')",
+          "methodName": "$router",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'page.salary.calculate'\" type=\"primary\" @click=\"$router.push('/salary/calculate')\"> <CalculatorOutlined /> 薪资核算 </a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "批量导出",
+          "permissionCode": "'button.salary.export'",
+          "clickExpression": "handleBatchExport",
+          "methodName": "handleBatchExport",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.salary.export'\" @click=\"handleBatchExport\"><DownloadOutlined /> 批量导出</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "生成工资单",
+          "permissionCode": "'button.salary.generatePayslip'",
+          "clickExpression": "handleGeneratePaySlip",
+          "methodName": "handleGeneratePaySlip",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.salary.generatePayslip'\" @click=\"handleGeneratePaySlip\"><FileTextOutlined /> 生成工资单</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "银行代发",
+          "permissionCode": "'button.salary.bankExport'",
+          "clickExpression": "handleBankExport",
+          "methodName": "handleBankExport",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.salary.bankExport'\" @click=\"handleBankExport\"><CreditCardOutlined /> 银行代发</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "刷新",
+          "permissionCode": null,
+          "clickExpression": "loadData",
+          "methodName": "loadData",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"loadData\"><SyncOutlined /> 刷新</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "查询",
+          "permissionCode": null,
+          "clickExpression": "handleSearch",
+          "methodName": "handleSearch",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" @click=\"handleSearch\">查询</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "重置",
+          "permissionCode": null,
+          "clickExpression": "handleReset",
+          "methodName": "handleReset",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"handleReset\">重置</a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\settings\\Settings.vue",
+      "page": "settings/Settings.vue",
+      "buttonCount": 2,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "重新加载",
+          "permissionCode": null,
+          "clickExpression": "loadSettings",
+          "methodName": "loadSettings",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"loadSettings\">重新加载</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "保存设置",
+          "permissionCode": null,
+          "clickExpression": "saveSettings",
+          "methodName": "saveSettings",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" :loading=\"saving\" @click=\"saveSettings\">保存设置</a-button>"
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\QHHRM\\hrms-web\\src\\views\\timesheet\\TimesheetList.vue",
+      "page": "timesheet/TimesheetList.vue",
+      "buttonCount": 6,
+      "buttons": [
+        {
+          "tagName": "a-button",
+          "label": "新增工时",
+          "permissionCode": "'button.timesheet.create'",
+          "clickExpression": "showAddModal",
+          "methodName": "showAddModal",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.timesheet.create'\" type=\"primary\" @click=\"showAddModal\"><PlusOutlined /> 新增工时</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "批量导入",
+          "permissionCode": "'page.timesheet.import'",
+          "clickExpression": "$router.push('/timesheets/import')",
+          "methodName": "$router",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'page.timesheet.import'\" @click=\"$router.push('/timesheets/import')\"><UploadOutlined /> 批量导入</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "批量导出",
+          "permissionCode": "'button.timesheet.export'",
+          "clickExpression": "handleBatchExport",
+          "methodName": "handleBatchExport",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button v-permission=\"'button.timesheet.export'\" @click=\"handleBatchExport\"><DownloadOutlined /> 批量导出</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "刷新",
+          "permissionCode": null,
+          "clickExpression": "loadData",
+          "methodName": "loadData",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"loadData\"><SyncOutlined /> 刷新</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "查询",
+          "permissionCode": null,
+          "clickExpression": "handleSearch",
+          "methodName": "handleSearch",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button type=\"primary\" @click=\"handleSearch\">查询</a-button>"
+        },
+        {
+          "tagName": "a-button",
+          "label": "重置",
+          "permissionCode": null,
+          "clickExpression": "handleReset",
+          "methodName": "handleReset",
+          "apiCalls": [],
+          "routeChanges": [],
+          "hasAsyncHandler": false,
+          "sourceSnippet": "<a-button @click=\"handleReset\">重置</a-button>"
+        }
+      ]
+    }
+  ]
+}
