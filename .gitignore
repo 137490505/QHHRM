@@ -20,6 +20,7 @@ hrms-web/playwright-report/
 .dbg/
 .trae/tmp/
 .trae-temp-build/
+tools/cloudflared.exe
 
 # Logs
 *.log
